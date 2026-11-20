@@ -1,6 +1,6 @@
 # BrightMart Traders – Inventory & Sales Management System (web interface)
 
-Same system as the Tkinter version, but the screens are built with **HTML and CSS** and served by a small
+Built with **HTML and CSS** and served by a small
 **Flask** app. It runs on the shop computer and is opened in a browser – **no internet or cloud needed**.
 
 ## Run it
@@ -8,9 +8,8 @@ Same system as the Tkinter version, but the screens are built with **HTML and CS
 pip install flask
 python app.py --demo       # sample data;  use  python app.py  for an empty system
 ```
-Open **http://127.0.0.1:5000** in a browser.
-To let a manager tablet on the shop Wi-Fi connect, run `python app.py --network` and open
-`http://<shop-computer-ip>:5000` on the tablet (trusted networks only).
+Open **https://github.com/Ori-codes/BrightMart.git** in a browser.
+To let a manager tablet on the shop Wi-Fi connect, run on the tablet (trusted networks only).
 
 ### Default logins
 | Role | Username | Password |
@@ -35,8 +34,7 @@ Open `static/css/style.css`. The colours are all variables at the top (`--blue`,
 Change them once and every page updates. Dark-mode colours are in the `:root[data-theme="dark"]` block.
 
 ## Security notes
-Passwords are hashed; every form carries a CSRF token; pages check the user's role on the server;
-the session key is generated once into `secret.key` (do not upload it to GitHub – it is in `.gitignore`).
+Passwords are hashed; every form carries a CSRF token; pages check the user's role on the server.
 
 ## Acknowledgement of AI use
-Developed with the help of Claude (Anthropic) as a learning-support tool; the author reviewed and adapted the code.
+Developed with the help of Claude (Anthropic) as a learning-support tool and as the default tester.
