@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Record Sale{% endblock %}
+{% block content %}
+<h1>Record Sale</h1>
+
+{% if receipt %}
+<section class="card receipt">
+  <h2>Receipt</h2>
+  <pre>{{ receipt }}</pre>
+  <button class="btn btn-sm" type="button" onclick="window.print()">Print</button>
+</section>
+{% endif %}
+
+<div class="split">
+  <section class="card">
+    <h2>Find products</h2>
+    <form method="get" class="toolbar">
+      <label class="sr-only" for="q">Search products</label>
+      <input id="q" name="q" type="search" value="{{ q }}" placeholder="Name, category or ID">
+      <button class="btn" type="submit">Search</button>
+    </form>
+    <div class="table-wrap">
+      <table class="stack">
+        <thead><tr><th>ID</th><th>Product</th><th class="num">Price</th><th class="num">In stock</th><th>Add</th></tr></thead>
+        <tbody>
+        {% for p in products %}
+          <tr class="{{ 'low' if p.is_low_stock() }}">
+            <td data-label="ID">{{ p.product_id }}</td>
+            <td data-label="Product">{{ p.name }}{% if p.is_low_stock() %} <span class="badge">LOW</span>{% endif %}</td>
+            <td data-label="Price" class="num">{{ p.unit_price|money }}</td>
+            <td data-label="In stock" class="num">{{ p.quantity_in_stock }}</td>
+            <td data-label="Add">
+              {% if p.quantity_in_stock > 0 %}
+              <form method="post" action="{{ url_for('sales_add') }}" class="inline-form">
+                <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+                <input type="hidden" name="product_id" value="{{ p.product_id }}">
+                <input type="hidden" name="q" value="{{ q }}">
+                <label class="sr-only" for="qty{{ p.product_id }}">Quantity for {{ p.name }}</label>
+                <input id="qty{{ p.product_id }}" class="qty" name="quantity" type="number" min="1" max="{{ p.quantity_in_stock }}" value="1">
+                <button class="btn btn-accent btn-sm" type="submit">Add</button>
+              </form>
+              {% else %}<span class="muted">Out of stock</span>{% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5" class="empty">No products found.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Current sale</h2>
+    <div class="table-wrap">
+      <table class="stack">
+        <thead><tr><th>Product</th><th class="num">Qty</th><th class="num">Unit price</th><th class="num">Line total</th><th></th></tr></thead>
+        <tbody>
+        {% for item in sale.items %}
+          <tr>
+            <td data-label="Product">{{ item.product.name }}</td>
+            <td data-label="Qty" class="num">{{ item.quantity }}</td>
+            <td data-label="Unit price" class="num">{{ item.unit_price|money }}</td>
+            <td data-label="Line total" class="num">{{ item.line_total()|money }}</td>
+            <td>
+              <form method="post" action="{{ url_for('sales_remove') }}">
+                <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+                <input type="hidden" name="product_id" value="{{ item.product.product_id }}">
+                <input type="hidden" name="q" value="{{ q }}">
+                <button class="btn btn-outline btn-sm" type="submit" aria-label="Remove {{ item.product.name }}">Remove</button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5" class="empty">No items yet. Add products from the list.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="total-row"><span>Total due</span><strong>{{ sale.calculate_total()|money }}</strong></div>
+    <div class="actions">
+      <form method="post" action="{{ url_for('sales_complete') }}">
+        <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+        <button class="btn btn-accent btn-lg" type="submit" {{ 'disabled' if not sale.items }}>Complete sale &amp; show receipt</button>
+      </form>
+      <form method="post" action="{{ url_for('sales_cancel') }}" onsubmit="return confirm('Discard the current sale?');">
+        <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+        <button class="btn btn-outline" type="submit" {{ 'disabled' if not sale.items }}>Cancel sale</button>
+      </form>
+    </div>
+  </section>
+</div>
+{% endblock %}

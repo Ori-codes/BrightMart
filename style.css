@@ -1,0 +1,244 @@
+/* ===================================================================
+   BrightMart - stylesheet
+   Colour scheme: BLUE (headers, structure) + ORANGE (action buttons)
+   = complementary colours, flat (no gradients).
+   Light and dark themes are switched with <html data-theme="...">.
+   Layouts: desktop (default), tablet (<= 1024px), mobile (<= 640px).
+   =================================================================== */
+
+/* ---------- 1. Colour variables ---------- */
+:root {
+  --blue:        #1D5FC7;   /* brand blue */
+  --blue-hover:  #174A9C;
+  --orange:      #F28C28;   /* brand orange */
+  --orange-hover:#D9741A;
+  --on-orange:   #1B1B1B;   /* dark text on orange keeps contrast high */
+
+  --bg:          #F3F6FB;
+  --surface:     #FFFFFF;
+  --surface-alt: #EAF0FA;
+  --text:        #14213D;
+  --muted:       #5B6B82;
+  --border:      #D3DCE9;
+
+  --header-bg:   #1D5FC7;
+  --header-text: #FFFFFF;
+  --th-bg:       #1D5FC7;
+  --th-text:     #FFFFFF;
+  --low-bg:      #FFE5CC;   /* orange tint for low-stock rows */
+  --danger:      #B3261E;
+  --ok-bg:       #DDF0E4;   --ok-text: #17613A;
+  --low-text:    #7A3A00;
+  --err-bg:      #FBE3E1;   --err-text: #7A1510;
+  --focus:       #F28C28;
+
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(20, 33, 61, .12);
+  --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+:root[data-theme="dark"] {
+  --bg:          #0D1626;
+  --surface:     #15223A;
+  --surface-alt: #1C2D4A;
+  --text:        #E8EEF8;
+  --muted:       #9DB0CC;
+  --border:      #2B3E5E;
+
+  --header-bg:   #12315F;
+  --header-text: #FFFFFF;
+  --th-bg:       #234E8E;
+  --th-text:     #FFFFFF;
+  --blue:        #3F82E8;
+  --blue-hover:  #5C96EE;
+  --low-bg:      #4A2E12;
+  --low-text:    #FFC48A;
+  --danger:      #FF8A80;
+  --ok-bg:       #173A2A;   --ok-text: #8FD9AE;
+  --err-bg:      #4A1D1B;   --err-text: #FFB4AE;
+  --shadow: 0 1px 3px rgba(0, 0, 0, .5);
+  color-scheme: dark;
+}
+
+/* ---------- 2. Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100vh; display: flex; flex-direction: column;
+  background: var(--bg); color: var(--text);
+  font-family: var(--font); font-size: 1rem; line-height: 1.5;
+}
+h1 { font-size: 1.7rem; margin: 0 0 1rem; color: var(--text); }
+h2 { font-size: 1.15rem; margin: 0 0 .8rem; color: var(--blue); }
+a { color: var(--blue); }
+.muted { color: var(--muted); }
+.accent { color: var(--orange); }
+.center { text-align: center; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip-link { position: absolute; left: -999px; top: 0; background: var(--orange); color: var(--on-orange); padding: .5rem 1rem; z-index: 100; }
+.skip-link:focus { left: 0; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+/* ---------- 3. Header & navigation ---------- */
+.site-header {
+  background: var(--header-bg); color: var(--header-text);
+  display: flex; align-items: center; flex-wrap: wrap; gap: .5rem 1.25rem;
+  padding: .6rem 1.25rem; border-bottom: 4px solid var(--orange);
+}
+.brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--header-text); }
+.brand-logo { height: 40px; width: auto; background: #fff; border-radius: 10px; padding: 3px 5px; }
+.brand-name { font-size: 1.35rem; font-weight: 800; letter-spacing: .3px; }
+.brand-name span { color: var(--orange); }
+.main-nav { display: flex; gap: .3rem; flex: 1; flex-wrap: wrap; }
+.main-nav a {
+  color: var(--header-text); text-decoration: none; font-weight: 600;
+  padding: .5rem .95rem; border-radius: 999px; border: 2px solid transparent;
+}
+.main-nav a:hover { border-color: rgba(255,255,255,.6); }
+.main-nav a.active { background: var(--orange); color: var(--on-orange); }
+.header-tools { display: flex; align-items: center; gap: .6rem; margin-left: auto; }
+.who { font-weight: 600; text-align: right; line-height: 1.2; }
+.who small { display: block; font-weight: 400; opacity: .85; }
+.icon-btn {
+  width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 1.25rem;
+  background: transparent; color: var(--header-text); border: 2px solid rgba(255,255,255,.7);
+}
+.icon-btn:hover { background: rgba(255,255,255,.18); }
+.icon-moon { display: none; }
+:root[data-theme="dark"] .icon-sun { display: none; }
+:root[data-theme="dark"] .icon-moon { display: inline; }
+
+/* ---------- 4. Layout ---------- */
+.container { width: 100%; max-width: 1240px; margin: 0 auto; padding: 1.25rem; flex: 1; }
+.site-footer { text-align: center; color: var(--muted); padding: 1rem; font-size: .85rem; }
+.page-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: .2rem; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.1rem 1.25rem; margin-bottom: 1.25rem; }
+.card.narrow { max-width: 640px; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: start; }
+.split > .card { margin-bottom: 0; }
+
+/* ---------- 5. Banners & flash messages ---------- */
+.banner, .flash { padding: .75rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-weight: 600; }
+.banner-low  { background: var(--low-bg); color: var(--low-text); border-left: 6px solid var(--orange); }
+.banner-ok   { background: var(--ok-bg);  color: var(--ok-text);  border-left: 6px solid var(--ok-text); }
+.flash-success { background: var(--ok-bg);  color: var(--ok-text); }
+.flash-error   { background: var(--err-bg); color: var(--err-text); border-left: 6px solid var(--danger); }
+.flash-warning { background: var(--low-bg); color: var(--low-text); }
+
+/* ---------- 6. Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+  min-height: 44px; padding: .55rem 1.15rem; border-radius: 999px; cursor: pointer;
+  font: 700 1rem var(--font); text-decoration: none; border: 2px solid var(--blue);
+  background: var(--blue); color: #fff; transition: background .15s, transform .1s, border-color .15s;
+}
+.btn:hover { background: var(--blue-hover); border-color: var(--blue-hover); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn-accent { background: var(--orange); border-color: var(--orange); color: var(--on-orange); }
+.btn-accent:hover { background: var(--orange-hover); border-color: var(--orange-hover); }
+.btn-outline { background: transparent; color: var(--blue); }
+.btn-outline:hover { background: var(--surface-alt); color: var(--blue-hover); }
+.btn-danger { background: transparent; color: var(--danger); border-color: var(--danger); }
+.btn-danger:hover { background: var(--danger); border-color: var(--danger); color: #fff; }
+.btn-light { background: #fff; color: #12315F; border-color: #fff; }
+.btn-light:hover { background: var(--orange); border-color: var(--orange); color: var(--on-orange); }
+.btn-sm { min-height: 38px; padding: .3rem .85rem; font-size: .9rem; }
+.btn-lg { min-height: 52px; padding: .7rem 1.6rem; font-size: 1.1rem; }
+.btn-block { width: 100%; }
+.btn[disabled] { opacity: .5; cursor: not-allowed; transform: none; }
+
+/* ---------- 7. Forms ---------- */
+label { display: block; font-weight: 600; margin: .75rem 0 .25rem; }
+input, select {
+  width: 100%; min-height: 44px; padding: .5rem .75rem; font: inherit; color: var(--text);
+  background: var(--surface); border: 2px solid var(--border); border-radius: 10px;
+}
+input:focus, select:focus { border-color: var(--orange); outline: none; box-shadow: 0 0 0 3px rgba(242,140,40,.35); }
+.stack-form .btn, .stack-form .actions { margin-top: 1.1rem; }
+.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 1rem; }
+.report-form { grid-template-columns: 2fr 1fr 1fr auto; align-items: end; }
+.toolbar { display: flex; gap: .6rem; margin-bottom: .9rem; }
+.toolbar input { flex: 1; }
+.actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.actions form { margin: 0; }
+.align-end { align-items: flex-end; }
+.inline-form { display: flex; gap: .4rem; align-items: center; }
+.qty { width: 72px; min-height: 38px; padding: .2rem .5rem; text-align: center; }
+
+/* ---------- 8. Tables ---------- */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th { background: var(--th-bg); color: var(--th-text); text-align: left; padding: .65rem .75rem; font-size: .9rem; white-space: nowrap; }
+th:first-child { border-top-left-radius: 8px; } th:last-child { border-top-right-radius: 8px; }
+td { padding: .6rem .75rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tbody tr:nth-child(even) { background: var(--surface-alt); }
+tbody tr.low { background: var(--low-bg); }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.empty { text-align: center; color: var(--muted); padding: 1.5rem; }
+.row-actions { display: flex; gap: .4rem; flex-wrap: wrap; }
+.row-actions form { margin: 0; }
+.badge { display: inline-block; padding: .1rem .55rem; border-radius: 999px; font-size: .75rem; font-weight: 800; background: var(--orange); color: var(--on-orange); }
+.badge-ok { background: var(--ok-bg); color: var(--ok-text); }
+.total-row { display: flex; justify-content: space-between; align-items: baseline; margin: 1rem 0; padding: .8rem 1rem; background: var(--surface-alt); border-left: 6px solid var(--orange); border-radius: 8px; font-size: 1.1rem; }
+.total-row strong { font-size: 1.7rem; color: var(--blue); }
+.summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: .75rem; margin: 1rem 0 0; }
+.summary div { background: var(--surface-alt); border-radius: 10px; padding: .6rem .9rem; border-left: 5px solid var(--orange); }
+.summary dt { font-size: .8rem; color: var(--muted); } .summary dd { margin: 0; font-weight: 700; }
+.receipt pre { background: var(--surface-alt); padding: 1rem; border-radius: 10px; overflow-x: auto; font-size: .9rem; }
+
+/* ---------- 9. Login page ---------- */
+.login-card { max-width: 420px; margin: 2rem auto; text-align: center; padding: 1.75rem; }
+.login-card h1 { margin-bottom: .2rem; }
+.login-card .stack-form { text-align: left; }
+.login-logo { max-width: 60%; height: auto; }
+
+/* ---------- 10. TABLET (manager tablet, <= 1024px) ---------- */
+@media (max-width: 1024px) {
+  .split { grid-template-columns: 1fr; }                   /* sales page stacks: products, then current sale */
+  .report-form { grid-template-columns: 1fr 1fr; }
+  .btn { min-height: 48px; }                                /* bigger touch targets */
+  .btn-sm { min-height: 44px; }
+  input, select { min-height: 48px; font-size: 1.05rem; }
+  .qty { min-height: 44px; }
+  .main-nav a { padding: .65rem 1.1rem; }
+  .main-nav { order: 3; width: 100%; flex: none; flex-wrap: nowrap; overflow-x: auto; }
+  .main-nav a { white-space: nowrap; }
+}
+
+/* ---------- 10b. Narrow tablets & phones (<= 860px): tables become stacked cards ---------- */
+@media (max-width: 860px) {
+  /* tables become stacked cards: each cell shows its column name (data-label) */
+  table.stack thead { position: absolute; left: -9999px; }
+  table.stack, table.stack tbody, table.stack tr, table.stack td { display: block; width: 100%; }
+  table.stack tr { border: 1px solid var(--border); border-radius: 10px; margin-bottom: .75rem; overflow: hidden; background: var(--surface); }
+  table.stack tbody tr:nth-child(even) { background: var(--surface); }
+  table.stack tbody tr.low { background: var(--low-bg); }
+  table.stack td { display: flex; justify-content: space-between; gap: 1rem; text-align: right; border-bottom: 1px solid var(--border); }
+  table.stack td:last-child { border-bottom: 0; }
+  table.stack td[data-label]::before { content: attr(data-label); font-weight: 700; color: var(--muted); text-align: left; }
+  table.stack td.empty { display: block; text-align: center; }
+  .row-actions { justify-content: flex-end; }
+}
+
+/* ---------- 11. MOBILE (<= 640px) ---------- */
+@media (max-width: 640px) {
+  .container { padding: .8rem; }
+  h1 { font-size: 1.4rem; }
+  .site-header { padding: .6rem .8rem; }
+  .main-nav { order: 3; width: 100%; flex-wrap: nowrap; overflow-x: auto; padding-bottom: .2rem; }
+  .main-nav a { white-space: nowrap; }
+  .who { display: none; }
+  .form-grid, .report-form { grid-template-columns: 1fr; }
+  .toolbar { flex-direction: column; }
+  .card { padding: .9rem; }
+  .actions .btn, .actions form, .actions form .btn { width: 100%; }
+  .total-row strong { font-size: 1.4rem; }
+
+}
+
+/* ---------- 12. Print (receipts) ---------- */
+@media print {
+  .site-header, .site-footer, .banner, .flash, .split, h1, .no-print, .btn { display: none !important; }
+  body { background: #fff; color: #000; }
+  .card { border: 0; box-shadow: none; }
+}

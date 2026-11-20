@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Suppliers{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Suppliers</h1>
+  <a class="btn btn-accent" href="{{ url_for('supplier_new') }}">+ Add supplier</a>
+</div>
+<section class="card">
+  <div class="table-wrap">
+    <table class="stack">
+      <thead><tr><th>ID</th><th>Supplier</th><th>Contact</th><th>Phone</th><th>Email</th><th>Address</th><th>Actions</th></tr></thead>
+      <tbody>
+      {% for s in suppliers %}
+        <tr>
+          <td data-label="ID">{{ s.supplier_id }}</td>
+          <td data-label="Supplier">{{ s.supplier_name }}</td>
+          <td data-label="Contact">{{ s.contact_person or '-' }}</td>
+          <td data-label="Phone">{{ s.phone or '-' }}</td>
+          <td data-label="Email">{{ s.email or '-' }}</td>
+          <td data-label="Address">{{ s.address or '-' }}</td>
+          <td data-label="Actions" class="row-actions">
+            <a class="btn btn-outline btn-sm" href="{{ url_for('supplier_edit', sid=s.supplier_id) }}">Edit</a>
+            <form method="post" action="{{ url_for('supplier_delete', sid=s.supplier_id) }}" onsubmit="return confirm('Delete this supplier?');">
+              <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+              <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7" class="empty">No suppliers yet.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

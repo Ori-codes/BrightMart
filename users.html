@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Users{% endblock %}
+{% block content %}
+<h1>Users</h1>
+<div class="split">
+  <section class="card">
+    <h2>Accounts</h2>
+    <div class="table-wrap">
+      <table class="stack">
+        <thead><tr><th>Username</th><th>Full name</th><th>Role</th><th></th></tr></thead>
+        <tbody>
+        {% for u in users %}
+          <tr>
+            <td data-label="Username">{{ u['username'] }}</td>
+            <td data-label="Full name">{{ u['full_name'] }}</td>
+            <td data-label="Role">{{ u['role'] }}</td>
+            <td>
+              {% if u['user_id'] != user.user_id %}
+              <form method="post" action="{{ url_for('user_delete', uid=u['user_id']) }}" onsubmit="return confirm('Delete user {{ u['username']|replace("'", "") }}?');">
+                <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+                <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+              </form>
+              {% else %}<span class="muted">(you)</span>{% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="card">
+    <h2>Add user</h2>
+    <form method="post" action="{{ url_for('user_add') }}" class="stack-form">
+      <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+      <label for="username">Username</label><input id="username" name="username" type="text" required value="{{ form.get('username', '') }}">
+      <label for="full_name">Full name</label><input id="full_name" name="full_name" type="text" required value="{{ form.get('full_name', '') }}">
+      <label for="password">Password (min 6 characters)</label><input id="password" name="password" type="password" required autocomplete="new-password">
+      <label for="role">Role</label>
+      <select id="role" name="role">{% for r in roles %}<option {{ 'selected' if form.get('role', 'Sales Staff') == r }}>{{ r }}</option>{% endfor %}</select>
+      <button class="btn btn-accent" type="submit">Add user</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

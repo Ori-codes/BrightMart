@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ store_name }}{% endblock %} | BrightMart</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/logo.svg') }}" type="image/svg+xml">
+  <!-- theme.js runs first so the saved light/dark choice is applied before the page paints -->
+  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('home') }}" aria-label="BrightMart home">
+      <img class="brand-logo" src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="46" height="40">
+      <span class="brand-name">Bright<span>Mart</span></span>
+    </a>
+
+    {% if user %}
+    <nav class="main-nav" aria-label="Main">
+      {% if can('record_sale') %}<a href="{{ url_for('sales') }}" class="{{ 'active' if endpoint.startswith('sales') }}">Record Sale</a>{% endif %}
+      {% if can('view_stock') %}<a href="{{ url_for('inventory') }}" class="{{ 'active' if endpoint == 'inventory' or endpoint.startswith('product') }}">Inventory</a>{% endif %}
+      {% if can('manage_suppliers') %}<a href="{{ url_for('suppliers') }}" class="{{ 'active' if endpoint.startswith('supplier') }}">Suppliers</a>{% endif %}
+      {% if can('view_reports') %}<a href="{{ url_for('reports') }}" class="{{ 'active' if endpoint.startswith('reports') }}">Reports</a>{% endif %}
+      {% if can('manage_users') %}<a href="{{ url_for('users') }}" class="{{ 'active' if endpoint.startswith('user') }}">Users</a>{% endif %}
+    </nav>
+    {% endif %}
+
+    <div class="header-tools">
+      {% if user %}<span class="who">{{ user.full_name }} <small>{{ user.role }}</small></span>{% endif %}
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Switch between light and dark mode" title="Switch light / dark mode">
+        <span class="icon-sun" aria-hidden="true">&#9728;</span><span class="icon-moon" aria-hidden="true">&#9790;</span>
+      </button>
+      {% if user %}
+      <form method="post" action="{{ url_for('logout') }}">
+        <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+        <button class="btn btn-light btn-sm" type="submit">Log out</button>
+      </form>
+      {% endif %}
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    {% if low_stock is not none %}
+      {% if low_stock %}
+      <div class="banner banner-low" role="status">
+        <strong>Low stock:</strong> {{ low_stock|length }} product{{ 's' if low_stock|length != 1 }} at or below reorder level &ndash;
+        {% for p in low_stock[:6] %}{{ p.name }}{{ ', ' if not loop.last }}{% endfor %}{{ ' ...' if low_stock|length > 6 }}
+      </div>
+      {% else %}
+      <div class="banner banner-ok" role="status">All stock levels are sufficient.</div>
+      {% endif %}
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+      <div class="flash flash-{{ category }}" role="alert">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">BrightMart Traders &middot; Inventory &amp; Sales Management System</footer>
+</body>
+</html>

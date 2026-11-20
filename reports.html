@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<h1>Reports</h1>
+<section class="card">
+  <form method="get" class="form-grid report-form">
+    <div>
+      <label for="type">Report type</label>
+      <select id="type" name="type" required>
+        <option value="" disabled {{ 'selected' if not kind }}>Choose a report...</option>
+        {% for value, label in types %}<option value="{{ value }}" {{ 'selected' if kind == value }}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <div><label for="start">From (YYYY-MM-DD)</label><input id="start" name="start" type="date" value="{{ start }}"></div>
+    <div><label for="end">To</label><input id="end" name="end" type="date" value="{{ end }}"></div>
+    <div class="actions align-end">
+      <button class="btn btn-accent" type="submit">Generate</button>
+      {% if report %}<a class="btn btn-outline" href="{{ url_for('reports_export', type=kind, start=start, end=end) }}">Export CSV</a>{% endif %}
+    </div>
+  </form>
+</section>
+
+{% if report %}
+<section class="card">
+  <h2>{{ report.title }}</h2>
+  <div class="table-wrap">
+    <table class="stack">
+      <thead><tr>{% for h in report.headers %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+      <tbody>
+      {% for row in report.rows %}
+        <tr>{% for cell in row %}<td data-label="{{ report.headers[loop.index0] }}">{{ cell }}</td>{% endfor %}</tr>
+      {% else %}
+        <tr><td colspan="{{ report.headers|length }}" class="empty">No records were found for this report.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <dl class="summary">
+    {% for key, value in report.summary.items() %}<div><dt>{{ key }}</dt><dd>{{ value }}</dd></div>{% endfor %}
+  </dl>
+</section>
+{% endif %}
+{% endblock %}

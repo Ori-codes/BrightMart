@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<section class="login-card card">
+  <img class="login-logo" src="{{ url_for('static', filename='img/logo.svg') }}" alt="BrightMart shopping basket logo" width="170" height="145">
+  <h1>Bright<span class="accent">Mart</span> Traders</h1>
+  <p class="muted">Inventory &amp; Sales Management &ndash; Log in</p>
+  <form method="post" class="stack-form">
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+    <label for="username">Username</label>
+    <input id="username" name="username" type="text" autocomplete="username" autofocus required>
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required>
+    <button class="btn btn-accent btn-block" type="submit">Log in</button>
+  </form>
+</section>
+{% endblock %}

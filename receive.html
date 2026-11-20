@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Receive stock{% endblock %}
+{% block content %}
+<h1>Receive stock</h1>
+<section class="card narrow">
+  <p><strong>{{ product.name }}</strong><br><span class="muted">Currently in stock: {{ product.quantity_in_stock }}</span></p>
+  <form method="post" class="stack-form">
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+    <label for="supplier_id">Supplier</label>
+    <select id="supplier_id" name="supplier_id">
+      {% set cur = form.get('supplier_id', product.supplier_id or '')|string %}
+      {% for s in suppliers %}<option value="{{ s.supplier_id }}" {{ 'selected' if cur == s.supplier_id|string }}>{{ s.supplier_name }}</option>{% endfor %}
+    </select>
+    <label for="quantity">Quantity received</label>
+    <input id="quantity" name="quantity" type="number" min="1" required autofocus value="{{ form.get('quantity', '') }}">
+    <div class="actions">
+      <button class="btn btn-accent" type="submit">Update stock</button>
+      <a class="btn btn-outline" href="{{ url_for('inventory') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

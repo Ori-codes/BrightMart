@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit supplier' if supplier else 'Add supplier' }}{% endblock %}
+{% block content %}
+<h1>{{ 'Edit supplier' if supplier else 'Add supplier' }}</h1>
+{% macro val(key, attr) %}{{ form.get(key, supplier[attr] if supplier else '') }}{% endmacro %}
+<section class="card narrow">
+  <form method="post" class="stack-form">
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+    <label for="name">Supplier name</label>
+    <input id="name" name="name" type="text" required value="{{ val('name', 'supplier_name') }}">
+    <div class="form-grid">
+      <div><label for="contact_person">Contact person</label><input id="contact_person" name="contact_person" type="text" value="{{ val('contact_person', 'contact_person') }}"></div>
+      <div><label for="phone">Phone</label><input id="phone" name="phone" type="tel" value="{{ val('phone', 'phone') }}"></div>
+      <div><label for="email">Email</label><input id="email" name="email" type="email" value="{{ val('email', 'email') }}"></div>
+      <div><label for="address">Address</label><input id="address" name="address" type="text" value="{{ val('address', 'address') }}"></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-accent" type="submit">Save</button>
+      <a class="btn btn-outline" href="{{ url_for('suppliers') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit product' if product else 'Add product' }}{% endblock %}
+{% block content %}
+<h1>{{ 'Edit product' if product else 'Add product' }}</h1>
+{% set v = form if form else {} %}
+<section class="card narrow">
+  <form method="post" class="stack-form">
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+    <label for="name">Product name</label>
+    <input id="name" name="name" type="text" required value="{{ v.get('name', product.name if product else '') }}">
+
+    <div class="form-grid">
+      <div>
+        <label for="category_id">Category</label>
+        <select id="category_id" name="category_id">
+          <option value="">(none)</option>
+          {% set cur = v.get('category_id', product.category_id if product else '')|string %}
+          {% for c in categories %}<option value="{{ c['category_id'] }}" {{ 'selected' if cur == c['category_id']|string }}>{{ c['category_name'] }}</option>{% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="supplier_id">Supplier</label>
+        <select id="supplier_id" name="supplier_id">
+          <option value="">(none)</option>
+          {% set cur = v.get('supplier_id', product.supplier_id if product else '')|string %}
+          {% for s in suppliers %}<option value="{{ s.supplier_id }}" {{ 'selected' if cur == s.supplier_id|string }}>{{ s.supplier_name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="price">Unit price (R)</label>
+        <input id="price" name="price" type="text" inputmode="decimal" required value="{{ v.get('price', ('%.2f'|format(product.unit_price)) if product else '') }}">
+      </div>
+      <div>
+        <label for="quantity">Quantity in stock</label>
+        <input id="quantity" name="quantity" type="number" min="0" required value="{{ v.get('quantity', product.quantity_in_stock if product else 0) }}">
+      </div>
+      <div>
+        <label for="reorder_level">Reorder level</label>
+        <input id="reorder_level" name="reorder_level" type="number" min="0" required value="{{ v.get('reorder_level', product.reorder_level if product else 5) }}">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-accent" type="submit">Save</button>
+      <a class="btn btn-outline" href="{{ url_for('inventory') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}
